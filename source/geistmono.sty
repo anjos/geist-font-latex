@@ -1,0 +1,82 @@
+%%
+%% SPDX-FileCopyrightText: 2026 Andre Anjos (github:anjos)
+%%
+%% SPDX-License-Identifier: LPPL-1.3c
+%%
+\NeedsTeXFormat{LaTeX2e}[2020/02/02]
+\ProvidesPackage{geistmono}
+    [2026/08/23 v1.0 Geist Mono support for LaTeX]
+
+\RequirePackage{iftex}
+
+\ifpdftex
+
+%%  pdfTeX cannot subset CFF-flavoured OpenType, so this branch uses the Type1
+%%  fonts and metrics generated from the OTFs with autoinst.  It all lives in
+%%  geistmono-nfss.sty; options pass straight through.
+\RequirePackageWithOptions{geistmono-nfss}
+
+\else
+
+%%  XeTeX and LuaTeX read the OpenType fonts directly.  The series names below
+%%  deliberately match the ones the pdfTeX branch declares, so a document that
+%%  says \fontseries{semibold} gets the same face under every engine.
+\RequirePackage{fontspec}
+\RequirePackage{xkeyval}
+
+\newcommand*{\geistmono@scale}{1}
+\DeclareOptionX{scale}{\renewcommand*{\geistmono@scale}{#1}}
+\DeclareOptionX{scaled}{\renewcommand*{\geistmono@scale}{#1}}
+\DeclareOptionX{mainfont}{%
+    \AtEndOfPackage{\renewcommand*{\familydefault}{\ttdefault}}}
+%%  Figure-style and bold-weight options only mean anything to the NFSS branch.
+%%  Accept and ignore them here so one \usepackage line works under any engine.
+\DeclareOptionX*{}
+\ProcessOptionsX\relax
+
+\setmonofont{GeistMono}[
+    Extension      = .otf,
+    Scale          = \geistmono@scale,
+    UprightFont    = *-Regular,
+    ItalicFont     = *-Italic,
+    BoldFont       = *-Bold,
+    BoldItalicFont = *-BoldItalic,
+    FontFace = {ul}{n}{*-Thin},
+    FontFace = {ul}{it}{*-ThinItalic},
+    FontFace = {thin}{n}{*-Thin},
+    FontFace = {thin}{it}{*-ThinItalic},
+    FontFace = {el}{n}{*-ExtraLight},
+    FontFace = {el}{it}{*-ExtraLightItalic},
+    FontFace = {extralight}{n}{*-ExtraLight},
+    FontFace = {extralight}{it}{*-ExtraLightItalic},
+    FontFace = {l}{n}{*-Light},
+    FontFace = {l}{it}{*-LightItalic},
+    FontFace = {light}{n}{*-Light},
+    FontFace = {light}{it}{*-LightItalic},
+    FontFace = {m}{n}{*-Regular},
+    FontFace = {m}{it}{*-Italic},
+    FontFace = {regular}{n}{*-Regular},
+    FontFace = {regular}{it}{*-Italic},
+    FontFace = {medium}{n}{*-Medium},
+    FontFace = {medium}{it}{*-MediumItalic},
+    FontFace = {sb}{n}{*-SemiBold},
+    FontFace = {sb}{it}{*-SemiBoldItalic},
+    FontFace = {semibold}{n}{*-SemiBold},
+    FontFace = {semibold}{it}{*-SemiBoldItalic},
+    FontFace = {b}{n}{*-Bold},
+    FontFace = {b}{it}{*-BoldItalic},
+    FontFace = {bold}{n}{*-Bold},
+    FontFace = {bold}{it}{*-BoldItalic},
+    FontFace = {eb}{n}{*-ExtraBold},
+    FontFace = {eb}{it}{*-ExtraBoldItalic},
+    FontFace = {extrabold}{n}{*-ExtraBold},
+    FontFace = {extrabold}{it}{*-ExtraBoldItalic},
+    FontFace = {ub}{n}{*-Black},
+    FontFace = {ub}{it}{*-BlackItalic},
+    FontFace = {black}{n}{*-Black},
+    FontFace = {black}{it}{*-BlackItalic},
+]
+
+\fi
+
+\endinput

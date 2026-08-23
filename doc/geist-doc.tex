@@ -1,0 +1,178 @@
+%%
+%% SPDX-FileCopyrightText: 2026 Andre Anjos (github:anjos)
+%%
+%% SPDX-License-Identifier: LPPL-1.3c
+%%
+\documentclass[11pt]{article}
+
+\usepackage[a4paper,margin=3cm]{geometry}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{hyperref}
+\hypersetup{hidelinks}
+
+\usepackage{geist}
+\usepackage{geistmono}
+\renewcommand{\familydefault}{\sfdefault}
+
+\newcommand{\pkg}[1]{\texttt{#1}}
+\newcommand{\opt}[1]{\texttt{#1}}
+
+\title{The \pkg{geist} package\\[.3em]
+       \large LaTeX support for the Geist and Geist Mono typefaces}
+\author{Andre Anjos}
+\date{Version 1.0 -- 2026/08/23}
+
+\begin{document}
+\maketitle
+
+\section{Introduction}
+
+Geist is the sans-serif and monospaced typeface family designed by Vercel and
+released under the SIL Open Font License. This package makes both families
+available to LaTeX, in all nine weights with matching italics.
+
+The package works with pdf\LaTeX, Xe\LaTeX{} and Lua\LaTeX. Under Xe\LaTeX{}
+and Lua\LaTeX{} the OpenType fonts are used directly through \pkg{fontspec}.
+Under pdf\LaTeX{} the package uses Type1 fonts and metrics generated from the
+OpenType originals with \pkg{autoinst}, because pdf\TeX{} cannot subset
+CFF-flavoured OpenType. Both paths declare the same font series names, so a
+document renders the same way whichever engine builds it.
+
+\section{Usage}
+
+\begin{verbatim}
+\usepackage{geist}      % Geist as the sans-serif family
+\usepackage{geistmono}  % Geist Mono as the typewriter family
+\end{verbatim}
+
+\noindent To use Geist as the document's main font, either pass the
+\opt{mainfont} option or redefine \verb|\familydefault| yourself:
+
+\begin{verbatim}
+\usepackage[mainfont]{geist}
+\end{verbatim}
+
+\subsection{Options}
+
+\begin{tabular}{@{}ll@{}}
+\toprule
+Option & Effect \\
+\midrule
+\opt{mainfont}          & make this family the document default \\
+\opt{scale=}\textit{n}  & scale the font by a factor \textit{n} \\
+\opt{scale=MatchLowercase} & scale to match the current font's x-height \\
+\opt{lining}, \opt{tabular}, \opt{proportional} & figure style (pdf\LaTeX{} only) \\
+\opt{bold}, \opt{semibold}, \opt{extrabold}, \opt{black} & face used for \verb|\bfseries| (pdf\LaTeX{} only) \\
+\opt{regular}, \opt{medium} & face used for \verb|\mdseries| (pdf\LaTeX{} only) \\
+\bottomrule
+\end{tabular}
+
+\medskip\noindent
+The options marked pdf\LaTeX{} only are accepted and ignored under Xe\LaTeX{}
+and Lua\LaTeX, so the same \verb|\usepackage| line works everywhere. Under
+those engines, select a weight directly with \verb|\fontseries| instead.
+
+\section{Weights}
+
+Geist ships more weights than NFSS's series axis traditionally exposes. Each is
+reachable by a long name, and most also by the conventional short NFSS code:
+
+\begin{longtable}{@{}lll@{}}
+\toprule
+Face & \verb|\fontseries| & Sample \\
+\midrule
+\endhead
+Thin        & \texttt{thin} / \texttt{ul}    & {\fontseries{ul}\selectfont Hamburgefonstiv} \\
+ExtraLight  & \texttt{extralight} / \texttt{el} & {\fontseries{el}\selectfont Hamburgefonstiv} \\
+Light       & \texttt{light} / \texttt{l}    & {\fontseries{l}\selectfont Hamburgefonstiv} \\
+Regular     & \texttt{regular} / \texttt{m}  & {\fontseries{m}\selectfont Hamburgefonstiv} \\
+Medium      & \texttt{medium}                & {\fontseries{medium}\selectfont Hamburgefonstiv} \\
+SemiBold    & \texttt{semibold} / \texttt{sb}& {\fontseries{sb}\selectfont Hamburgefonstiv} \\
+Bold        & \texttt{bold} / \texttt{b}     & {\fontseries{b}\selectfont Hamburgefonstiv} \\
+ExtraBold   & \texttt{extrabold} / \texttt{eb} & {\fontseries{eb}\selectfont Hamburgefonstiv} \\
+Black       & \texttt{black} / \texttt{ub}   & {\fontseries{ub}\selectfont Hamburgefonstiv} \\
+\bottomrule
+\end{longtable}
+
+\noindent Medium has no short code: NFSS reserves none for that weight.
+
+\subsection{Italics}
+
+Every weight has a true italic, not a slanted approximation:
+
+\begin{longtable}{@{}ll@{}}
+\toprule
+\verb|\fontseries| & Sample \\
+\midrule
+\endhead
+\texttt{thin}       & {\fontseries{ul}\itshape\selectfont Hamburgefonstiv} \\
+\texttt{light}      & {\fontseries{l}\itshape\selectfont Hamburgefonstiv} \\
+\texttt{regular}    & {\fontseries{m}\itshape\selectfont Hamburgefonstiv} \\
+\texttt{medium}     & {\fontseries{medium}\itshape\selectfont Hamburgefonstiv} \\
+\texttt{semibold}   & {\fontseries{sb}\itshape\selectfont Hamburgefonstiv} \\
+\texttt{bold}       & {\fontseries{b}\itshape\selectfont Hamburgefonstiv} \\
+\texttt{extrabold}  & {\fontseries{eb}\itshape\selectfont Hamburgefonstiv} \\
+\texttt{black}      & {\fontseries{ub}\itshape\selectfont Hamburgefonstiv} \\
+\bottomrule
+\end{longtable}
+
+\section{Geist Mono}
+
+\pkg{geistmono} sets Geist Mono as \verb|\ttdefault| and takes the same
+options and series names:
+
+\begin{longtable}{@{}ll@{}}
+\toprule
+\verb|\fontseries| & Sample \\
+\midrule
+\endhead
+\texttt{light}    & {\ttfamily\fontseries{l}\selectfont 0O1lI \{\}[]()\#\&@\$} \\
+\texttt{regular}  & {\ttfamily\fontseries{m}\selectfont 0O1lI \{\}[]()\#\&@\$} \\
+\texttt{medium}   & {\ttfamily\fontseries{medium}\selectfont 0O1lI \{\}[]()\#\&@\$} \\
+\texttt{bold}     & {\ttfamily\fontseries{b}\selectfont 0O1lI \{\}[]()\#\&@\$} \\
+\texttt{black}    & {\ttfamily\fontseries{ub}\selectfont 0O1lI \{\}[]()\#\&@\$} \\
+\bottomrule
+\end{longtable}
+
+\section{Specimen}
+
+{\fontsize{9}{12}\selectfont
+The quick brown fox jumps over the lazy dog. \textbf{The quick brown fox jumps
+over the lazy dog.} \textit{The quick brown fox jumps over the lazy dog.}
+0123456789 --- \guillemotleft cr\oe ur\guillemotright{} \ss{} \ae{} \o{}
+\AA{} \c{c} \'e \`a \^o \"u \~n.
+\par}
+
+\medskip
+
+{\fontsize{9}{12}\ttfamily\selectfont
+The quick brown fox jumps over the lazy dog.\\
+\{ \} [ ] ( ) < > / \textbackslash{} | \& \# @ \$ \% * + - = \_ \textasciitilde
+\par}
+
+\section{Fonts included}
+
+\begin{tabular}{@{}lll@{}}
+\toprule
+Family & Upstream version & Faces \\
+\midrule
+Geist      & 1.800 & 9 weights + italics (18) \\
+Geist Mono & 1.700 & 9 weights + italics (18) \\
+\bottomrule
+\end{tabular}
+
+\medskip\noindent
+Taken from the \texttt{vercel/geist-font} release v1.7.2. Geist Pixel, a set of
+five decorative display faces in the same release, is not packaged: it has no
+weight or shape axis to map onto NFSS.
+
+\section{License}
+
+The fonts, and everything derived from them --- the Type1 fonts, metrics and
+encodings generated during packaging --- are licensed under the SIL Open Font
+License, version 1.1; see \texttt{OFL.txt}. Geist declares no Reserved Font
+Name. The LaTeX support files and this documentation are licensed under the
+LaTeX Project Public License, version 1.3c or later.
+
+\end{document}
