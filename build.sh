@@ -35,6 +35,12 @@ curl -fsSL https://mirrors.ctan.org/fonts/utilities/fontools.zip -o "$BUILD/font
 unzip -qo "$BUILD/fontools.zip" -d "$BUILD/fontools"
 cp "$BUILD"/fontools/fontools/share/*.enc "$BUILD/work/"
 
+# OT1 and T1 only, deliberately.  autoinst turns the encoding list into a
+# \RequirePackage[...]{fontenc} call, and whichever encoding comes last becomes
+# the document's current one.  With LY1 in the list, any family that has no LY1
+# shape -- Computer Modern, so anything still using \rmfamily -- gets silently
+# substituted with Times.  LY1 is a legacy Y&Y encoding; T1 covers the same
+# ground without breaking the roman family.
 # $1: family directory under fonts/, $2: -typeface value, $3: NFSS role
 generate() {
     local src=$1 typeface=$2 role=$3
@@ -44,7 +50,7 @@ generate() {
         -target="$BUILD/tds" \
         -vendor=vercel \
         -typeface="$typeface" \
-        -encoding=OT1,T1,LY1 \
+        -encoding=OT1,T1 \
         -ts1 \
         "$role" \
         "$src"-*.otf )

@@ -58,6 +58,27 @@ obvious use in a document body. Open an issue if you want it.
 
 ## Building from source
 
-Support files are generated with `autoinst` from the CTAN `fontools` package.
-`./build.sh` runs the whole pipeline in a TeX Live container and produces both
-the CTAN submission tree and `geist.tds.zip` under `dist/`.
+Support files are generated with `autoinst` from the CTAN `fontools` package,
+which in turn drives `otftotfm` from the LCDF TypeTools. Neither is needed to
+*use* the package, only to rebuild it.
+
+```
+./build.sh    # regenerate everything into build/ and dist/
+./verify.sh   # install dist/geist.tds.zip into a throwaway texmf tree and
+              # compile the documentation with pdflatex, xelatex and lualatex
+```
+
+`build.sh` needs `autoinst` (conda-forge `texlive-core`, or any TeX Live),
+`otftotfm` (`brew install lcdf-typetools`) and `tectonic`, which builds the
+documentation. `verify.sh` needs a full TeX Live; the easiest way to get all of
+it at once is the `texlive/texlive` container:
+
+```
+docker run --rm -v "$PWD:/pkg" -w /pkg texlive/texlive:latest ./verify.sh
+```
+
+The package is generated in OT1 and T1 only. `autoinst` turns its encoding list
+into a `\RequirePackage{fontenc}` call whose last entry becomes the document's
+current encoding, and with LY1 in that list every family lacking an LY1 shape —
+Computer Modern, so anything still using `\rmfamily` — is silently substituted
+with Times. T1 covers the same ground without that side effect.
