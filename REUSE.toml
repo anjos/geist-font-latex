@@ -1,0 +1,14 @@
+# SPDX-FileCopyrightText: 2026 Andre Anjos (github:anjos)
+#
+# SPDX-License-Identifier: LPPL-1.3c
+
+version = 1
+SPDX-PackageName = "geist"
+SPDX-PackageSupplier = "Andre Anjos <andre.anjos@idiap.ch>"
+SPDX-PackageDownloadLocation = "https://github.com/anjos/geist-latex"
+
+# the fonts are upstream's, not ours
+[[annotations]]
+path = "fonts/**"
+SPDX-FileCopyrightText = "Copyright 2024 The Geist Project Authors <https://github.com/vercel/geist-font>"
+SPDX-License-Identifier = "OFL-1.1"
