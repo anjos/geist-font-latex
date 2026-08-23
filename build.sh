@@ -101,14 +101,24 @@ echo "==> packaging"
 install -d "$DIST"
 ( cd "$BUILD/tds" && zip -qr "$DIST/geist.tds.zip" . )
 
-# CTAN wants the package tree mirroring the TDS, with the .tds.zip beside it
-# rather than inside it.  Everything a user needs is in the tree; the zip is
-# what TeX Live's installer consumes.
-cp -R "$BUILD/tds" "$DIST/geist"
+# The CTAN archive tree is NOT the TDS tree.  CTAN keeps one layer of
+# directories grouped by file type at the package root -- see fonts/alegreya,
+# which is autoinst-generated like this one -- and takes the .tds.zip out of the
+# upload into install/fonts/ for people installing by hand.  Reproducing the
+# full TDS depth here would just duplicate what the zip already carries.
+install -d "$DIST/geist"/{doc,latex,opentype,type1,tfm,vf,enc,map,source}
 cp "$ROOT/README.md" "$DIST/geist/"
-# the sources that generate the rest, so the package can be rebuilt
-install -d "$DIST/geist/source"
-cp "$ROOT/build.sh" "$ROOT/source"/*.sty "$ROOT/doc/geist-doc.tex" "$DIST/geist/source/"
+cp "$BUILD/doc/geist-doc.pdf" "$ROOT/doc/geist-doc.tex" "$ROOT/fonts/OFL.txt" \
+   "$DIST/geist/doc/"
+cp "$BUILD"/tds/tex/latex/*/*             "$DIST/geist/latex/"
+cp "$BUILD"/tds/fonts/opentype/vercel/*/* "$DIST/geist/opentype/"
+cp "$BUILD"/tds/fonts/type1/vercel/*/*    "$DIST/geist/type1/"
+cp "$BUILD"/tds/fonts/tfm/vercel/*/*      "$DIST/geist/tfm/"
+cp "$BUILD"/tds/fonts/vf/vercel/*/*       "$DIST/geist/vf/"
+cp "$BUILD"/tds/fonts/enc/dvips/*/*       "$DIST/geist/enc/"
+cp "$BUILD"/tds/fonts/map/dvips/*/*       "$DIST/geist/map/"
+# how to regenerate all of the above
+cp "$ROOT/build.sh" "$ROOT/verify.sh" "$DIST/geist/source/"
 
 ( cd "$DIST" && zip -qr geist-ctan.zip geist geist.tds.zip )
 
@@ -116,4 +126,4 @@ echo
 echo "done:"
 echo "  $DIST/geist-ctan.zip  ($(du -h "$DIST/geist-ctan.zip" | cut -f1))  <- upload this"
 echo "  $DIST/geist.tds.zip   ($(du -h "$DIST/geist.tds.zip" | cut -f1))"
-echo "  $DIST/geist/          (package tree)"
+echo "  $DIST/geist/          (CTAN archive tree)"
