@@ -4,7 +4,7 @@
 #
 # SPDX-License-Identifier: LPPL-1.3c
 #
-# Installs the flat dist/geist package tree into a throwaway texmf tree
+# Installs the flat dist/geist-font package tree into a throwaway texmf tree
 # and compiles the documentation with every engine the package claims to
 # support. The tree is thrown away so nothing here can be satisfied by accident
 # from the working directory or from a real installation.
@@ -12,29 +12,48 @@
 set -euo pipefail
 cd "$(dirname "$0")"
 ROOT=$PWD
-PACKAGE_ROOT=$ROOT/dist/geist
+PACKAGE_ID=geist-font
+PACKAGE_ROOT=$ROOT/dist/$PACKAGE_ID
+ARCHIVE=$ROOT/dist/$PACKAGE_ID.zip
 
 [ -d "$PACKAGE_ROOT" ] || { echo "error: run build.sh first" >&2; exit 1; }
+[ -f "$ARCHIVE" ] || { echo "error: run build.sh first" >&2; exit 1; }
+
+# CTAN requires every archive entry to live below a top-level directory whose
+# name is identical to the package ID. Keep this check here so future packaging
+# changes cannot silently reintroduce a mismatched submission directory.
+unexpected=$(unzip -Z1 "$ARCHIVE" | grep -Ev "^$PACKAGE_ID(/|$)" || true)
+[ -z "$unexpected" ] || {
+    echo "error: archive entries found outside $PACKAGE_ID/:" >&2
+    echo "$unexpected" >&2
+    exit 1
+}
+for script in build.sh verify.sh; do
+    [ -f "$PACKAGE_ROOT/source/$script" ] || {
+        echo "error: archive tree is missing source/$script" >&2
+        exit 1
+    }
+done
 
 TMP=$(mktemp -d)
 trap 'rm -rf "$TMP"' EXIT
 
 export TEXMFHOME="$TMP/texmf"
 install -d \
-    "$TEXMFHOME/tex/latex/geist" \
-    "$TEXMFHOME/fonts/opentype/vercel/geist" \
-    "$TEXMFHOME/fonts/type1/vercel/geist" \
-    "$TEXMFHOME/fonts/tfm/vercel/geist" \
-    "$TEXMFHOME/fonts/vf/vercel/geist" \
-    "$TEXMFHOME/fonts/enc/dvips/geist" \
-    "$TEXMFHOME/fonts/map/dvips/geist"
-cp "$PACKAGE_ROOT"/latex/*    "$TEXMFHOME/tex/latex/geist/"
-cp "$PACKAGE_ROOT"/opentype/* "$TEXMFHOME/fonts/opentype/vercel/geist/"
-cp "$PACKAGE_ROOT"/type1/*    "$TEXMFHOME/fonts/type1/vercel/geist/"
-cp "$PACKAGE_ROOT"/tfm/*      "$TEXMFHOME/fonts/tfm/vercel/geist/"
-cp "$PACKAGE_ROOT"/vf/*       "$TEXMFHOME/fonts/vf/vercel/geist/"
-cp "$PACKAGE_ROOT"/enc/*      "$TEXMFHOME/fonts/enc/dvips/geist/"
-cp "$PACKAGE_ROOT"/map/*      "$TEXMFHOME/fonts/map/dvips/geist/"
+    "$TEXMFHOME/tex/latex/geist-font" \
+    "$TEXMFHOME/fonts/opentype/vercel/geist-font" \
+    "$TEXMFHOME/fonts/type1/vercel/geist-font" \
+    "$TEXMFHOME/fonts/tfm/vercel/geist-font" \
+    "$TEXMFHOME/fonts/vf/vercel/geist-font" \
+    "$TEXMFHOME/fonts/enc/dvips/geist-font" \
+    "$TEXMFHOME/fonts/map/dvips/geist-font"
+cp "$PACKAGE_ROOT"/latex/*    "$TEXMFHOME/tex/latex/geist-font/"
+cp "$PACKAGE_ROOT"/opentype/* "$TEXMFHOME/fonts/opentype/vercel/geist-font/"
+cp "$PACKAGE_ROOT"/type1/*    "$TEXMFHOME/fonts/type1/vercel/geist-font/"
+cp "$PACKAGE_ROOT"/tfm/*      "$TEXMFHOME/fonts/tfm/vercel/geist-font/"
+cp "$PACKAGE_ROOT"/vf/*       "$TEXMFHOME/fonts/vf/vercel/geist-font/"
+cp "$PACKAGE_ROOT"/enc/*      "$TEXMFHOME/fonts/enc/dvips/geist-font/"
+cp "$PACKAGE_ROOT"/map/*      "$TEXMFHOME/fonts/map/dvips/geist-font/"
 mktexlsr "$TEXMFHOME" >/dev/null
 
 # The Type1 path only works once the map files are registered.  updmap-user

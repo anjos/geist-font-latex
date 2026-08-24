@@ -65,12 +65,13 @@ which in turn drives `otftotfm` from the LCDF TypeTools. Neither is needed to
 
 ```
 ./build.sh    # regenerate everything into build/ and dist/
-./verify.sh   # install the flat dist/geist tree into a throwaway texmf
+./verify.sh   # install the flat dist/geist-font tree into a throwaway texmf
               # tree and compile with pdflatex, xelatex and lualatex
 ```
 
-The CTAN upload is `dist/geist-font.zip`. It contains only the flat `geist/`
-package tree; TeX Live constructs its installation layout from
+The CTAN upload is `dist/geist-font.zip`. It contains only the flat
+`geist-font/` package tree, whose top-level directory matches the CTAN package
+ID as required. TeX Live constructs its installation layout from
 that tree.
 
 `build.sh` downloads `autoinst` from the CTAN `fontools` package and needs

@@ -14,7 +14,7 @@ ROOT=$PWD
 BUILD=$ROOT/build
 DIST=$ROOT/dist
 CTAN_NAME=geist-font
-CTAN_DIR=geist
+CTAN_DIR=$CTAN_NAME
 
 for tool in curl unzip otftotfm; do
     command -v "$tool" >/dev/null || {

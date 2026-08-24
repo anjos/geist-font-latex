@@ -2,8 +2,10 @@
 
 ## CTAN identity
 
-- The CTAN package and release archive are named `geist-font`; its submission
-  directory and CTAN archive location remain `geist`.
+- The CTAN package, release archive, submission directory, and CTAN archive
+  location are all named `geist-font`.
+- CTAN requires the top-level directory name to be identical to the package ID;
+  never allow these names to diverge.
 - The public LaTeX packages remain `geist` and `geistmono`; do not rename their
   `.sty` files, NFSS families, font files, map files, or TeX-facing commands.
 - Documentation must distinguish the `geist-font` CTAN distribution from the
@@ -11,7 +13,7 @@
 
 ## CTAN archive
 
-- Build and upload only the flat CTAN tree, with one top-level `geist/`
+- Build and upload only the flat CTAN tree, with one top-level `geist-font/`
   directory and the file-type directories `doc/`, `latex/`,
   `opentype/`, `type1/`, `tfm/`, `vf/`, `enc/`, `map/`, and `source/`.
 - Do not create, mention, bundle, or publish a `.tds.zip` archive.
@@ -21,7 +23,7 @@
 
 ## CTAN submission metadata
 
-- Use `geist-font` as the package ID and `/fonts/geist` as its location.
+- Use `geist-font` as the package ID and `/fonts/geist-font` as its location.
 - Use the renamed repository URLs:
   - Repository: `https://github.com/anjos/geist-font-latex`
   - Bugs: `https://github.com/anjos/geist-font-latex/issues`
