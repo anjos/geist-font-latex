@@ -4,11 +4,12 @@ SPDX-FileCopyrightText: 2026 Andre Anjos (github:anjos)
 SPDX-License-Identifier: LPPL-1.3c
 -->
 
-# geist — LaTeX support for the Geist and Geist Mono typefaces
+# geist-fonts — LaTeX support for the Geist and Geist Mono typefaces
 
-`geist` provides LaTeX support for [Geist](https://github.com/vercel/geist-font),
-the sans-serif and monospaced typeface family designed by Vercel. Both families
-are covered in all nine weights (Thin through Black) with matching italics.
+The `geist-fonts` CTAN distribution provides the `geist` and `geistmono` LaTeX
+packages for [Geist](https://github.com/vercel/geist-font), the sans-serif and
+monospaced typeface family designed by Vercel. Both families are covered in all
+nine weights (Thin through Black) with matching italics.
 
 The package works with **pdfLaTeX**, **XeLaTeX** and **LuaLaTeX**. Under XeLaTeX
 and LuaLaTeX the OpenType fonts are used directly through `fontspec`; under
@@ -64,14 +65,18 @@ which in turn drives `otftotfm` from the LCDF TypeTools. Neither is needed to
 
 ```
 ./build.sh    # regenerate everything into build/ and dist/
-./verify.sh   # install dist/geist.tds.zip into a throwaway texmf tree and
-              # compile the documentation with pdflatex, xelatex and lualatex
+./verify.sh   # install the flat dist/geist-fonts tree into a throwaway texmf
+              # tree and compile with pdflatex, xelatex and lualatex
 ```
 
-`build.sh` needs `autoinst` (conda-forge `texlive-core`, or any TeX Live),
-`otftotfm` (`brew install lcdf-typetools`) and `tectonic`, which builds the
-documentation. `verify.sh` needs a full TeX Live; the easiest way to get all of
-it at once is the `texlive/texlive` container:
+The CTAN upload is `dist/geist-fonts.zip`. It contains only the flat
+`geist-fonts/` package tree; TeX Live constructs its installation layout from
+that tree.
+
+`build.sh` downloads `autoinst` from the CTAN `fontools` package and needs
+`otftotfm` (`brew install lcdf-typetools`) and either `tectonic` or `xelatex`
+to build the documentation. `verify.sh` needs a full TeX Live; the easiest way
+to get all of it at once is the `texlive/texlive` container:
 
 ```
 docker run --rm -v "$PWD:/pkg" -w /pkg texlive/texlive:latest ./verify.sh

@@ -5,24 +5,32 @@
 # SPDX-License-Identifier: LPPL-1.3c
 #
 # Regenerates the LaTeX support files from the vendored OTFs and assembles the
-# CTAN submission tree.  Requires `autoinst` (CTAN fontools, shipped with TeX
-# Live) and `otftotfm` (LCDF TypeTools) on PATH.
+# CTAN submission tree. Downloads `autoinst` from CTAN's fontools package and
+# requires `otftotfm` (LCDF TypeTools) on PATH.
 
 set -euo pipefail
 cd "$(dirname "$0")"
 ROOT=$PWD
 BUILD=$ROOT/build
 DIST=$ROOT/dist
+CTAN_NAME=geist-fonts
 
-for tool in autoinst otftotfm tectonic; do
+for tool in curl unzip otftotfm; do
     command -v "$tool" >/dev/null || {
         echo "error: $tool not found on PATH." >&2
-        echo "  autoinst  comes with TeX Live (conda-forge: texlive-core)" >&2
         echo "  otftotfm  comes with LCDF TypeTools (brew install lcdf-typetools)" >&2
-        echo "  tectonic  builds the documentation (brew install tectonic)" >&2
         exit 1
     }
 done
+
+if command -v tectonic >/dev/null; then
+    DOC_COMPILER=tectonic
+elif command -v xelatex >/dev/null; then
+    DOC_COMPILER=xelatex
+else
+    echo "error: tectonic or xelatex not found on PATH." >&2
+    exit 1
+fi
 
 rm -rf "$BUILD" "$DIST"
 mkdir -p "$BUILD/work" "$BUILD/tds"
@@ -34,6 +42,7 @@ mkdir -p "$BUILD/work" "$BUILD/tds"
 curl -fsSL https://mirrors.ctan.org/fonts/utilities/fontools.zip -o "$BUILD/fontools.zip"
 unzip -qo "$BUILD/fontools.zip" -d "$BUILD/fontools"
 cp "$BUILD"/fontools/fontools/share/*.enc "$BUILD/work/"
+AUTOINST=$BUILD/fontools/fontools/bin/autoinst
 
 # OT1 and T1 only, deliberately.  autoinst turns the encoding list into a
 # \RequirePackage[...]{fontenc} call, and whichever encoding comes last becomes
@@ -46,7 +55,7 @@ generate() {
     local src=$1 typeface=$2 role=$3
     echo "==> generating $src"
     cp "$ROOT/fonts/$src"/*.otf "$BUILD/work/"
-    ( cd "$BUILD/work" && autoinst \
+    ( cd "$BUILD/work" && "$AUTOINST" \
         -target="$BUILD/tds" \
         -vendor=vercel \
         -typeface="$typeface" \
@@ -86,44 +95,44 @@ done
 
 echo "==> documentation"
 install -d "$BUILD/tds/doc/fonts/geist"
-# Built with tectonic: it is XeTeX, so this also exercises the fontspec branch
-# of geist.sty, and it needs no TeX installation of its own.  Compile in a flat
-# directory holding the styles and the OTFs, which is what a user without the
-# package installed would have.
+# Build with a XeTeX-based engine, which also exercises the fontspec branch of
+# geist.sty. Compile in a flat directory holding the styles and OTFs, like a
+# user building without the package installed.
 install -d "$BUILD/doc"
 cp "$ROOT/doc/geist-doc.tex" "$ROOT/source"/*.sty "$BUILD/doc/"
 cp "$ROOT/fonts"/*/*.otf "$BUILD/doc/"
-( cd "$BUILD/doc" && tectonic -X compile geist-doc.tex )
+if [ "$DOC_COMPILER" = tectonic ]; then
+    ( cd "$BUILD/doc" && tectonic -X compile geist-doc.tex )
+else
+    ( cd "$BUILD/doc" && \
+        xelatex -interaction=nonstopmode -halt-on-error geist-doc.tex >/dev/null && \
+        xelatex -interaction=nonstopmode -halt-on-error geist-doc.tex >/dev/null )
+fi
 cp "$ROOT/README.md" "$ROOT/fonts/OFL.txt" "$ROOT/doc/geist-doc.tex" \
    "$BUILD/doc/geist-doc.pdf" "$BUILD/tds/doc/fonts/geist/"
 
 echo "==> packaging"
 install -d "$DIST"
-( cd "$BUILD/tds" && zip -qr "$DIST/geist.tds.zip" . )
 
-# The CTAN archive tree is NOT the TDS tree.  CTAN keeps one layer of
-# directories grouped by file type at the package root -- see fonts/alegreya,
-# which is autoinst-generated like this one -- and takes the .tds.zip out of the
-# upload into install/fonts/ for people installing by hand.  Reproducing the
-# full TDS depth here would just duplicate what the zip already carries.
-install -d "$DIST/geist"/{doc,latex,opentype,type1,tfm,vf,enc,map,source}
-cp "$ROOT/README.md" "$DIST/geist/"
+# CTAN expects the generated files in a flat tree with one layer of directories
+# grouped by file type. TeX Live turns this tree into its installation layout.
+install -d "$DIST/$CTAN_NAME"/{doc,latex,opentype,type1,tfm,vf,enc,map,source}
+cp "$ROOT/README.md" "$DIST/$CTAN_NAME/"
 cp "$BUILD/doc/geist-doc.pdf" "$ROOT/doc/geist-doc.tex" "$ROOT/fonts/OFL.txt" \
-   "$DIST/geist/doc/"
-cp "$BUILD"/tds/tex/latex/*/*             "$DIST/geist/latex/"
-cp "$BUILD"/tds/fonts/opentype/vercel/*/* "$DIST/geist/opentype/"
-cp "$BUILD"/tds/fonts/type1/vercel/*/*    "$DIST/geist/type1/"
-cp "$BUILD"/tds/fonts/tfm/vercel/*/*      "$DIST/geist/tfm/"
-cp "$BUILD"/tds/fonts/vf/vercel/*/*       "$DIST/geist/vf/"
-cp "$BUILD"/tds/fonts/enc/dvips/*/*       "$DIST/geist/enc/"
-cp "$BUILD"/tds/fonts/map/dvips/*/*       "$DIST/geist/map/"
+   "$DIST/$CTAN_NAME/doc/"
+cp "$BUILD"/tds/tex/latex/*/*             "$DIST/$CTAN_NAME/latex/"
+cp "$BUILD"/tds/fonts/opentype/vercel/*/* "$DIST/$CTAN_NAME/opentype/"
+cp "$BUILD"/tds/fonts/type1/vercel/*/*    "$DIST/$CTAN_NAME/type1/"
+cp "$BUILD"/tds/fonts/tfm/vercel/*/*      "$DIST/$CTAN_NAME/tfm/"
+cp "$BUILD"/tds/fonts/vf/vercel/*/*       "$DIST/$CTAN_NAME/vf/"
+cp "$BUILD"/tds/fonts/enc/dvips/*/*       "$DIST/$CTAN_NAME/enc/"
+cp "$BUILD"/tds/fonts/map/dvips/*/*       "$DIST/$CTAN_NAME/map/"
 # how to regenerate all of the above
-cp "$ROOT/build.sh" "$ROOT/verify.sh" "$DIST/geist/source/"
+cp "$ROOT/build.sh" "$ROOT/verify.sh" "$DIST/$CTAN_NAME/source/"
 
-( cd "$DIST" && zip -qr geist-ctan.zip geist geist.tds.zip )
+( cd "$DIST" && zip -qr "$CTAN_NAME.zip" "$CTAN_NAME" )
 
 echo
 echo "done:"
-echo "  $DIST/geist-ctan.zip  ($(du -h "$DIST/geist-ctan.zip" | cut -f1))  <- upload this"
-echo "  $DIST/geist.tds.zip   ($(du -h "$DIST/geist.tds.zip" | cut -f1))"
-echo "  $DIST/geist/          (CTAN archive tree)"
+echo "  $DIST/$CTAN_NAME.zip  ($(du -h "$DIST/$CTAN_NAME.zip" | cut -f1))  <- upload this"
+echo "  $DIST/$CTAN_NAME/     (flat CTAN archive tree)"
