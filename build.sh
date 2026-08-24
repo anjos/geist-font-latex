@@ -14,6 +14,7 @@ ROOT=$PWD
 BUILD=$ROOT/build
 DIST=$ROOT/dist
 CTAN_NAME=geist-font
+CTAN_DIR=geist
 
 for tool in curl unzip otftotfm; do
     command -v "$tool" >/dev/null || {
@@ -116,23 +117,23 @@ install -d "$DIST"
 
 # CTAN expects the generated files in a flat tree with one layer of directories
 # grouped by file type. TeX Live turns this tree into its installation layout.
-install -d "$DIST/$CTAN_NAME"/{doc,latex,opentype,type1,tfm,vf,enc,map,source}
-cp "$ROOT/README.md" "$DIST/$CTAN_NAME/"
+install -d "$DIST/$CTAN_DIR"/{doc,latex,opentype,type1,tfm,vf,enc,map,source}
+cp "$ROOT/README.md" "$DIST/$CTAN_DIR/"
 cp "$BUILD/doc/geist-doc.pdf" "$ROOT/doc/geist-doc.tex" "$ROOT/fonts/OFL.txt" \
-   "$DIST/$CTAN_NAME/doc/"
-cp "$BUILD"/tds/tex/latex/*/*             "$DIST/$CTAN_NAME/latex/"
-cp "$BUILD"/tds/fonts/opentype/vercel/*/* "$DIST/$CTAN_NAME/opentype/"
-cp "$BUILD"/tds/fonts/type1/vercel/*/*    "$DIST/$CTAN_NAME/type1/"
-cp "$BUILD"/tds/fonts/tfm/vercel/*/*      "$DIST/$CTAN_NAME/tfm/"
-cp "$BUILD"/tds/fonts/vf/vercel/*/*       "$DIST/$CTAN_NAME/vf/"
-cp "$BUILD"/tds/fonts/enc/dvips/*/*       "$DIST/$CTAN_NAME/enc/"
-cp "$BUILD"/tds/fonts/map/dvips/*/*       "$DIST/$CTAN_NAME/map/"
+   "$DIST/$CTAN_DIR/doc/"
+cp "$BUILD"/tds/tex/latex/*/*             "$DIST/$CTAN_DIR/latex/"
+cp "$BUILD"/tds/fonts/opentype/vercel/*/* "$DIST/$CTAN_DIR/opentype/"
+cp "$BUILD"/tds/fonts/type1/vercel/*/*    "$DIST/$CTAN_DIR/type1/"
+cp "$BUILD"/tds/fonts/tfm/vercel/*/*      "$DIST/$CTAN_DIR/tfm/"
+cp "$BUILD"/tds/fonts/vf/vercel/*/*       "$DIST/$CTAN_DIR/vf/"
+cp "$BUILD"/tds/fonts/enc/dvips/*/*       "$DIST/$CTAN_DIR/enc/"
+cp "$BUILD"/tds/fonts/map/dvips/*/*       "$DIST/$CTAN_DIR/map/"
 # how to regenerate all of the above
-cp "$ROOT/build.sh" "$ROOT/verify.sh" "$DIST/$CTAN_NAME/source/"
+cp "$ROOT/build.sh" "$ROOT/verify.sh" "$DIST/$CTAN_DIR/source/"
 
-( cd "$DIST" && zip -qr "$CTAN_NAME.zip" "$CTAN_NAME" )
+( cd "$DIST" && zip -qr "$CTAN_NAME.zip" "$CTAN_DIR" )
 
 echo
 echo "done:"
 echo "  $DIST/$CTAN_NAME.zip  ($(du -h "$DIST/$CTAN_NAME.zip" | cut -f1))  <- upload this"
-echo "  $DIST/$CTAN_NAME/     (flat CTAN archive tree)"
+echo "  $DIST/$CTAN_DIR/      (flat CTAN archive tree)"
