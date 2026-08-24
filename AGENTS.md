@@ -23,9 +23,9 @@
 
 - Use `geist-fonts` as the package ID and `/fonts/geist-fonts` as its location.
 - Use the renamed repository URLs:
-  - Repository: `https://github.com/anjos/geist-font-latex`
-  - Bugs: `https://github.com/anjos/geist-font-latex/issues`
-  - Announce: `https://github.com/anjos/geist-font-latex/releases`
+  - Repository: `https://github.com/anjos/geist-fonts-latex`
+  - Bugs: `https://github.com/anjos/geist-fonts-latex/issues`
+  - Announce: `https://github.com/anjos/geist-fonts-latex/releases`
 - Omit the Home URL so that no URL is used more than once.
 - Preserve the upstream identification as `vercel/geist-font` v1.7.2, with
   Geist 1.800 and Geist Mono 1.700, unmodified and with no Reserved Font Name.

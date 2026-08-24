@@ -5,7 +5,7 @@
 version = 1
 SPDX-PackageName = "geist-fonts"
 SPDX-PackageSupplier = "Andre Anjos <andre.anjos@idiap.ch>"
-SPDX-PackageDownloadLocation = "https://github.com/anjos/geist-font-latex"
+SPDX-PackageDownloadLocation = "https://github.com/anjos/geist-fonts-latex"
 
 # the fonts are upstream's, not ours
 [[annotations]]
