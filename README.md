@@ -4,9 +4,9 @@ SPDX-FileCopyrightText: 2026 Andre Anjos (github:anjos)
 SPDX-License-Identifier: LPPL-1.3c
 -->
 
-# geist-fonts — LaTeX support for the Geist and Geist Mono typefaces
+# geist-font — LaTeX support for the Geist and Geist Mono typefaces
 
-The `geist-fonts` CTAN distribution provides the `geist` and `geistmono` LaTeX
+The `geist-font` CTAN distribution provides the `geist` and `geistmono` LaTeX
 packages for [Geist](https://github.com/vercel/geist-font), the sans-serif and
 monospaced typeface family designed by Vercel. Both families are covered in all
 nine weights (Thin through Black) with matching italics.
@@ -65,12 +65,12 @@ which in turn drives `otftotfm` from the LCDF TypeTools. Neither is needed to
 
 ```
 ./build.sh    # regenerate everything into build/ and dist/
-./verify.sh   # install the flat dist/geist-fonts tree into a throwaway texmf
+./verify.sh   # install the flat dist/geist-font tree into a throwaway texmf
               # tree and compile with pdflatex, xelatex and lualatex
 ```
 
-The CTAN upload is `dist/geist-fonts.zip`. It contains only the flat
-`geist-fonts/` package tree; TeX Live constructs its installation layout from
+The CTAN upload is `dist/geist-font.zip`. It contains only the flat
+`geist-font/` package tree; TeX Live constructs its installation layout from
 that tree.
 
 `build.sh` downloads `autoinst` from the CTAN `fontools` package and needs

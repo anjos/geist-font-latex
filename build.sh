@@ -13,7 +13,7 @@ cd "$(dirname "$0")"
 ROOT=$PWD
 BUILD=$ROOT/build
 DIST=$ROOT/dist
-CTAN_NAME=geist-fonts
+CTAN_NAME=geist-font
 
 for tool in curl unzip otftotfm; do
     command -v "$tool" >/dev/null || {

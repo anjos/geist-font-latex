@@ -4,7 +4,7 @@
 #
 # SPDX-License-Identifier: LPPL-1.3c
 #
-# Installs the flat dist/geist-fonts package tree into a throwaway texmf tree
+# Installs the flat dist/geist-font package tree into a throwaway texmf tree
 # and compiles the documentation with every engine the package claims to
 # support. The tree is thrown away so nothing here can be satisfied by accident
 # from the working directory or from a real installation.
@@ -12,7 +12,7 @@
 set -euo pipefail
 cd "$(dirname "$0")"
 ROOT=$PWD
-PACKAGE_ROOT=$ROOT/dist/geist-fonts
+PACKAGE_ROOT=$ROOT/dist/geist-font
 
 [ -d "$PACKAGE_ROOT" ] || { echo "error: run build.sh first" >&2; exit 1; }
 
@@ -21,20 +21,20 @@ trap 'rm -rf "$TMP"' EXIT
 
 export TEXMFHOME="$TMP/texmf"
 install -d \
-    "$TEXMFHOME/tex/latex/geist-fonts" \
-    "$TEXMFHOME/fonts/opentype/vercel/geist-fonts" \
-    "$TEXMFHOME/fonts/type1/vercel/geist-fonts" \
-    "$TEXMFHOME/fonts/tfm/vercel/geist-fonts" \
-    "$TEXMFHOME/fonts/vf/vercel/geist-fonts" \
-    "$TEXMFHOME/fonts/enc/dvips/geist-fonts" \
-    "$TEXMFHOME/fonts/map/dvips/geist-fonts"
-cp "$PACKAGE_ROOT"/latex/*    "$TEXMFHOME/tex/latex/geist-fonts/"
-cp "$PACKAGE_ROOT"/opentype/* "$TEXMFHOME/fonts/opentype/vercel/geist-fonts/"
-cp "$PACKAGE_ROOT"/type1/*    "$TEXMFHOME/fonts/type1/vercel/geist-fonts/"
-cp "$PACKAGE_ROOT"/tfm/*      "$TEXMFHOME/fonts/tfm/vercel/geist-fonts/"
-cp "$PACKAGE_ROOT"/vf/*       "$TEXMFHOME/fonts/vf/vercel/geist-fonts/"
-cp "$PACKAGE_ROOT"/enc/*      "$TEXMFHOME/fonts/enc/dvips/geist-fonts/"
-cp "$PACKAGE_ROOT"/map/*      "$TEXMFHOME/fonts/map/dvips/geist-fonts/"
+    "$TEXMFHOME/tex/latex/geist-font" \
+    "$TEXMFHOME/fonts/opentype/vercel/geist-font" \
+    "$TEXMFHOME/fonts/type1/vercel/geist-font" \
+    "$TEXMFHOME/fonts/tfm/vercel/geist-font" \
+    "$TEXMFHOME/fonts/vf/vercel/geist-font" \
+    "$TEXMFHOME/fonts/enc/dvips/geist-font" \
+    "$TEXMFHOME/fonts/map/dvips/geist-font"
+cp "$PACKAGE_ROOT"/latex/*    "$TEXMFHOME/tex/latex/geist-font/"
+cp "$PACKAGE_ROOT"/opentype/* "$TEXMFHOME/fonts/opentype/vercel/geist-font/"
+cp "$PACKAGE_ROOT"/type1/*    "$TEXMFHOME/fonts/type1/vercel/geist-font/"
+cp "$PACKAGE_ROOT"/tfm/*      "$TEXMFHOME/fonts/tfm/vercel/geist-font/"
+cp "$PACKAGE_ROOT"/vf/*       "$TEXMFHOME/fonts/vf/vercel/geist-font/"
+cp "$PACKAGE_ROOT"/enc/*      "$TEXMFHOME/fonts/enc/dvips/geist-font/"
+cp "$PACKAGE_ROOT"/map/*      "$TEXMFHOME/fonts/map/dvips/geist-font/"
 mktexlsr "$TEXMFHOME" >/dev/null
 
 # The Type1 path only works once the map files are registered.  updmap-user

@@ -3,9 +3,9 @@
 # SPDX-License-Identifier: LPPL-1.3c
 
 version = 1
-SPDX-PackageName = "geist-fonts"
+SPDX-PackageName = "geist-font"
 SPDX-PackageSupplier = "Andre Anjos <andre.anjos@idiap.ch>"
-SPDX-PackageDownloadLocation = "https://github.com/anjos/geist-fonts-latex"
+SPDX-PackageDownloadLocation = "https://github.com/anjos/geist-font-latex"
 
 # the fonts are upstream's, not ours
 [[annotations]]
